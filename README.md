@@ -1,0 +1,3 @@
+# speedtestlogger
+
+Logs internet speeds
