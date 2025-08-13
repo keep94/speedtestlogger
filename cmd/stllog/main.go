@@ -37,6 +37,9 @@ func main() {
 		addEntry(store, &entry)
 	} else {
 		csvrow := readcsv(fCsv)
+		if len(csvrow) < 7 {
+			log.Fatal("Not enough columns in csv")
+		}
 		download, _ := strconv.ParseFloat(csvrow[5], 64)
 		upload, _ := strconv.ParseFloat(csvrow[6], 64)
 		entry.DownloadMbps = download * 8.0 / 1000000.0
