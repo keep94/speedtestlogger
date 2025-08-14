@@ -2,7 +2,6 @@
 package aggregators
 
 import (
-	"slices"
 	"time"
 
 	"github.com/keep94/speedtestlogger/stl"
@@ -108,7 +107,7 @@ func (y yearly) Add(date time.Time, numPeriods int) time.Time {
 
 // ByPeriodTotaler aggregates stl.Entry instances by period.
 type ByPeriodTotaler struct {
-	summaries []DatedSummary
+	summaries []*DatedSummary
 	smap      map[time.Time]*DatedSummary
 	recurring Recurring
 	loc       *time.Location
@@ -145,29 +144,34 @@ func (b *ByPeriodTotaler) Add(entry stl.Entry) {
 	}
 }
 
-// DatedSummaries returns a copy of the summaries collected so far.
+// DatedSummaries returns copies of the DatedSummaries collected so far.
 // Each DatedSummary falls on the beginning of a day, month, or year
 // depending on the recurring parameter passed to NewByPeriodTotaler().
-func (b *ByPeriodTotaler) DatedSummaries() []DatedSummary {
-	return slices.Clone(b.summaries)
+func (b *ByPeriodTotaler) DatedSummaries() []*DatedSummary {
+	result := make([]*DatedSummary, 0, len(b.summaries))
+	for _, summary := range b.summaries {
+		summaryCopy := *summary
+		result = append(result, &summaryCopy)
+	}
+	return result
 }
 
 func initializeDatedSummaries(
-	start, end time.Time, recurring Recurring) []DatedSummary {
+	start, end time.Time, recurring Recurring) []*DatedSummary {
 	current := recurring.Add(end, -1)
-	var result []DatedSummary
+	var result []*DatedSummary
 	for !current.Before(start) {
-		result = append(result, DatedSummary{Date: current})
+		result = append(result, &DatedSummary{Date: current})
 		current = recurring.Add(current, -1)
 	}
 	return result
 }
 
 func initializeSummaryMap(
-	summaries []DatedSummary) map[time.Time]*DatedSummary {
+	summaries []*DatedSummary) map[time.Time]*DatedSummary {
 	result := make(map[time.Time]*DatedSummary)
-	for i := range summaries {
-		result[summaries[i].Date] = &summaries[i]
+	for _, summary := range summaries {
+		result[summary.Date] = summary
 	}
 	return result
 }
