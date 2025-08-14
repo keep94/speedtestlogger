@@ -4,7 +4,9 @@ go 1.24.1
 
 require (
 	github.com/keep94/consume2 v0.7.0
+	github.com/keep94/context v0.1.0
 	github.com/keep94/toolbox v0.14.0
+	github.com/keep94/weblogs v1.0.1
 	github.com/mattn/go-sqlite3 v1.14.16
 	github.com/stretchr/testify v1.10.0
 )

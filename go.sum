@@ -2,8 +2,12 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/keep94/consume2 v0.7.0 h1:JbS/XxmPbHgEG+1pvGEGc192nCOEx+S/DmJBZz9fkvQ=
 github.com/keep94/consume2 v0.7.0/go.mod h1:oI2GS5jRbaWtXBO3wLiqr+dHpNmEyOgAJd4C1Jxp9o0=
+github.com/keep94/context v0.1.0 h1:FecPv0geuWcdf+8nRmF5RnF6Sk2ahy26jFt7uRivmUw=
+github.com/keep94/context v0.1.0/go.mod h1:IXF7ZIYvKxmGCPiN5tJYbhv5AWaxIDclpOQHuzJsxLI=
 github.com/keep94/toolbox v0.14.0 h1:qN73Zap6rIOv4YkHhghsPajVLkFtNixN7Wa/Kr6y++U=
 github.com/keep94/toolbox v0.14.0/go.mod h1:24PicnIycd6JZJwdE3+7MewUw3GNYAsDM1FaHDwiBvY=
+github.com/keep94/weblogs v1.0.1 h1:sEN2JFqTPkc6BkCxwCKNXQuzh2h8eHLDLiCH2/KMWmM=
+github.com/keep94/weblogs v1.0.1/go.mod h1:bYHO1S7UhVcPkoDjKAJTuCdSXoVdcv1n1I09kYlBKwE=
 github.com/mattn/go-sqlite3 v1.14.16 h1:yOQRA0RpS5PFz/oikGwBEqvAWhWg5ufRz4ETLjwpU1Y=
 github.com/mattn/go-sqlite3 v1.14.16/go.mod h1:2eHXhiwb8IkHr+BDWZGa96P6+rkvnG63S2DGjv9HUNg=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
