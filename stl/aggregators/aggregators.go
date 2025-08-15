@@ -21,15 +21,15 @@ func (a *Average) Add(value float64) {
 	a.Sum += value
 }
 
-// Empty returns true if this average is empty.
-func (a *Average) Empty() bool {
-	return a.N <= 0
+// Exists returns true if this average exists.
+func (a *Average) Exists() bool {
+	return a.N > 0
 }
 
-// Avg returns the average value. Avg panics if called on an empty Average.
+// Avg returns the average value. Avg panics if Exists returns false.
 func (a *Average) Avg() float64 {
-	if a.Empty() {
-		panic("Avg() called on empty Average")
+	if !a.Exists() {
+		panic("Avg() called but Exists returns false")
 	}
 	return a.Sum / float64(a.N)
 }

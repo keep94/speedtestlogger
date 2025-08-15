@@ -1,4 +1,4 @@
-package day
+package summary
 
 import (
 	"html/template"
@@ -7,7 +7,6 @@ import (
 
 	"github.com/keep94/consume2"
 	"github.com/keep94/speedtestlogger/cmd/stlview/common"
-	"github.com/keep94/speedtestlogger/stl"
 	"github.com/keep94/speedtestlogger/stl/aggregators"
 	"github.com/keep94/speedtestlogger/stl/dates"
 	"github.com/keep94/speedtestlogger/stl/stldb"
@@ -36,8 +35,8 @@ var (
   </style>
 </head>
 <body>
-  <h1>Speeds for {{.Format .Current}} &nbsp; &nbsp; Build: {{.BuildId}}</h1>
-  <a href="{{.Prev .Current}}">prev</a> &nbsp; <a href="{{.Next .Current}}">next</a> &nbsp; <a href="{{.DrillUp .Current}}">up</a>
+  <h1>Average Speeds for {{.Format .Current}} &nbsp; &nbsp; Build: {{.BuildId}}</h1>
+  <a href="{{.Prev .Current}}">prev</a> &nbsp; <a href="{{.Next .Current}}">next</a> &nbsp; {{if .DrillUp .Current}}<a href="{{.DrillUp .Current}}">up</a>{{end}}
   <br><br>
   <span class="normal">
   {{with $top := .}}
@@ -49,16 +48,16 @@ var (
   <br><br>
   <table border=1>
     <tr>
-      <th>Timestamp</th>
-      <th>Download (Mbps)</th>
-      <th>Upload (Mbps)</th>
+      <th>Date</th>
+      <th>Avg Download</th>
+      <th>Avg Upload</th>
     </tr>
     {{with $top := .}}
-    {{range .Entries}}
+    {{range .DatedSummaries}}
     <tr>
-      <td>{{$top.FormatTimestamp .Ts}}</td>
-      <td align="right">{{$top.FormatSpeed .DownloadMbps}}</td>
-      <td align="right">{{$top.FormatSpeed .UploadMbps}}</td>
+      <td><a href="{{$top.DrillDown .Date}}">{{$top.DrillDownFormat .Date}}</a></td>
+      <td align="right">{{with .DownloadMbps}}{{if .Exists}}{{$top.FormatSpeed .Avg}}{{else}}--{{end}}{{end}}</td>
+      <td align="right">{{with .UploadMbps}}{{if .Exists}}{{$top.FormatSpeed .Avg}}{{else}}--{{end}}{{end}}</td>
     </tr>
     {{end}}
     {{end}}
@@ -80,17 +79,23 @@ type Handler struct {
 
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	current, _ := common.ParseDateParam(
-		r.Form.Get(common.Date), h.Clock.Now(), common.Day())
-	handler := common.Day()
-	var entries []*stl.Entry
+	dateStr := r.Form.Get(common.Date)
+
+	// We need just yyyyMM or yyyy on summary page.
+	if len(dateStr) > 6 {
+		dateStr = dateStr[:6]
+	}
+	current, handler := common.ParseDateParam(
+		dateStr, h.Clock.Now(), common.Month())
+	totaler := aggregators.NewByPeriodTotaler(
+		current, handler.End(current), handler.Recurring(), h.Location)
 	var summary aggregators.Summary
 	err := h.Store.Entries(
 		nil,
 		dates.ToTimestamp(current, h.Location),
 		dates.ToTimestamp(handler.End(current), h.Location),
 		consume2.Compose(
-			consume2.AppendPtrsTo(&entries),
+			consume2.Call(totaler.Add),
 			consume2.Call(summary.Add),
 		))
 	if err != nil {
@@ -106,7 +111,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			handler,
 			current,
 			h.BuildId,
-			entries,
+			totaler.DatedSummaries(),
 			summary,
 		},
 	)
@@ -116,10 +121,10 @@ type view struct {
 	common.SpeedFormatter
 	common.TimestampFormatter
 	common.DateHandler
-	Current time.Time
-	BuildId string
-	Entries []*stl.Entry
-	Summary aggregators.Summary
+	Current        time.Time
+	BuildId        string
+	DatedSummaries []*aggregators.DatedSummary
+	Summary        aggregators.Summary
 }
 
 func init() {

@@ -9,7 +9,9 @@ import (
 	"time"
 
 	"github.com/keep94/context"
+	"github.com/keep94/speedtestlogger/cmd/stlview/common"
 	"github.com/keep94/speedtestlogger/cmd/stlview/day"
+	"github.com/keep94/speedtestlogger/cmd/stlview/summary"
 	"github.com/keep94/speedtestlogger/stl/stldb/for_sqlite"
 	"github.com/keep94/toolbox/build"
 	"github.com/keep94/toolbox/date_util"
@@ -46,8 +48,15 @@ func main() {
 	http.HandleFunc("/", rootRedirect)
 	version, _ := build.MainVersion()
 	http.Handle(
-		"/day",
+		common.DayPage,
 		&day.Handler{
+			Store:    kStore,
+			BuildId:  build.BuildId(version),
+			Clock:    kClock,
+			Location: time.Local})
+	http.Handle(
+		common.SummaryPage,
+		&summary.Handler{
 			Store:    kStore,
 			BuildId:  build.BuildId(version),
 			Clock:    kClock,

@@ -44,18 +44,22 @@ func TestByPeriodTotaler(t *testing.T) {
 	assert.Equal(t, date_util.YMD(2025, 12, 1), datedSummaries[0].Date)
 	assert.Equal(t, 120.0, datedSummaries[0].DownloadMbps.Avg())
 	assert.Equal(t, 12.0, datedSummaries[0].UploadMbps.Avg())
+	assert.True(t, datedSummaries[0].DownloadMbps.Exists())
+	assert.True(t, datedSummaries[0].UploadMbps.Exists())
 
 	assert.Equal(t, date_util.YMD(2025, 11, 1), datedSummaries[1].Date)
-	assert.True(t, datedSummaries[1].DownloadMbps.Empty())
-	assert.True(t, datedSummaries[1].UploadMbps.Empty())
+	assert.False(t, datedSummaries[1].DownloadMbps.Exists())
+	assert.False(t, datedSummaries[1].UploadMbps.Exists())
 
 	assert.Equal(t, date_util.YMD(2025, 10, 1), datedSummaries[2].Date)
 	assert.Equal(t, 100.0, datedSummaries[2].DownloadMbps.Avg())
 	assert.Equal(t, 10.0, datedSummaries[2].UploadMbps.Avg())
+	assert.True(t, datedSummaries[2].DownloadMbps.Exists())
+	assert.True(t, datedSummaries[2].UploadMbps.Exists())
 
 	assert.Equal(t, date_util.YMD(2025, 9, 1), datedSummaries[3].Date)
-	assert.True(t, datedSummaries[3].DownloadMbps.Empty())
-	assert.True(t, datedSummaries[3].UploadMbps.Empty())
+	assert.False(t, datedSummaries[3].DownloadMbps.Exists())
+	assert.False(t, datedSummaries[3].UploadMbps.Exists())
 }
 
 func TestDaily(t *testing.T) {

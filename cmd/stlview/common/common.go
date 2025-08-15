@@ -13,9 +13,9 @@ import (
 )
 
 const (
-	Date         = "date"
-	kDayPage     = "/day"
-	kSummaryPage = "/summary"
+	Date        = "date"
+	DayPage     = "/day"
+	SummaryPage = "/summary"
 )
 
 // NewTemplate returns a new template instance. name is the name
@@ -131,7 +131,7 @@ func (d dayHandler) DrillDownFormat(date time.Time) string {
 
 func (d dayHandler) DrillUp(current time.Time) *url.URL {
 	month := aggregators.Monthly().Normalize(current)
-	return http_util.NewUrl(kSummaryPage, Date, month.Format("200601"))
+	return http_util.NewUrl(SummaryPage, Date, month.Format("200601"))
 }
 
 func (d dayHandler) Format(current time.Time) string {
@@ -140,12 +140,12 @@ func (d dayHandler) Format(current time.Time) string {
 
 func (d dayHandler) Prev(current time.Time) *url.URL {
 	prev := aggregators.Daily().Add(current, -1)
-	return http_util.NewUrl(kDayPage, Date, prev.Format("20060102"))
+	return http_util.NewUrl(DayPage, Date, prev.Format("20060102"))
 }
 
 func (d dayHandler) Next(current time.Time) *url.URL {
 	next := aggregators.Daily().Add(current, 1)
-	return http_util.NewUrl(kDayPage, Date, next.Format("20060102"))
+	return http_util.NewUrl(DayPage, Date, next.Format("20060102"))
 }
 
 func (d dayHandler) Recurring() aggregators.Recurring {
@@ -164,7 +164,7 @@ type monthHandler struct {
 }
 
 func (m monthHandler) DrillDown(date time.Time) *url.URL {
-	return http_util.NewUrl(kDayPage, Date, date.Format("20060102"))
+	return http_util.NewUrl(DayPage, Date, date.Format("20060102"))
 }
 
 func (m monthHandler) DrillDownFormat(date time.Time) string {
@@ -173,7 +173,7 @@ func (m monthHandler) DrillDownFormat(date time.Time) string {
 
 func (m monthHandler) DrillUp(current time.Time) *url.URL {
 	year := aggregators.Yearly().Normalize(current)
-	return http_util.NewUrl(kSummaryPage, Date, year.Format("2006"))
+	return http_util.NewUrl(SummaryPage, Date, year.Format("2006"))
 }
 
 func (m monthHandler) Format(current time.Time) string {
@@ -182,12 +182,12 @@ func (m monthHandler) Format(current time.Time) string {
 
 func (m monthHandler) Prev(current time.Time) *url.URL {
 	prev := aggregators.Monthly().Add(current, -1)
-	return http_util.NewUrl(kSummaryPage, Date, prev.Format("200601"))
+	return http_util.NewUrl(SummaryPage, Date, prev.Format("200601"))
 }
 
 func (m monthHandler) Next(current time.Time) *url.URL {
 	next := aggregators.Monthly().Add(current, 1)
-	return http_util.NewUrl(kSummaryPage, Date, next.Format("200601"))
+	return http_util.NewUrl(SummaryPage, Date, next.Format("200601"))
 }
 
 func (m monthHandler) Recurring() aggregators.Recurring {
@@ -206,7 +206,7 @@ type yearHandler struct {
 }
 
 func (y yearHandler) DrillDown(date time.Time) *url.URL {
-	return http_util.NewUrl(kSummaryPage, Date, date.Format("200601"))
+	return http_util.NewUrl(SummaryPage, Date, date.Format("200601"))
 }
 
 func (y yearHandler) DrillDownFormat(date time.Time) string {
@@ -223,12 +223,12 @@ func (y yearHandler) Format(current time.Time) string {
 
 func (y yearHandler) Prev(current time.Time) *url.URL {
 	prev := aggregators.Yearly().Add(current, -1)
-	return http_util.NewUrl(kSummaryPage, Date, prev.Format("2006"))
+	return http_util.NewUrl(SummaryPage, Date, prev.Format("2006"))
 }
 
 func (y yearHandler) Next(current time.Time) *url.URL {
 	next := aggregators.Yearly().Add(current, 1)
-	return http_util.NewUrl(kSummaryPage, Date, next.Format("2006"))
+	return http_util.NewUrl(SummaryPage, Date, next.Format("2006"))
 }
 
 func (y yearHandler) Recurring() aggregators.Recurring {
