@@ -86,7 +86,10 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		dateStr = dateStr[:6]
 	}
 	current, handler := common.ParseDateParam(
-		dateStr, h.Clock.Now(), common.Month())
+		dateStr,
+		h.Clock.Now().Unix(),
+		h.Location,
+		common.Month())
 	totaler := aggregators.NewByPeriodTotaler(
 		current, handler.End(current), handler.Recurring(), h.Location)
 	var summary aggregators.Summary

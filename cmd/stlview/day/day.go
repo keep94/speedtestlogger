@@ -81,7 +81,10 @@ type Handler struct {
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	current, _ := common.ParseDateParam(
-		r.Form.Get(common.Date), h.Clock.Now(), common.Day())
+		r.Form.Get(common.Date),
+		h.Clock.Now().Unix(),
+		h.Location,
+		common.Day())
 	handler := common.Day()
 	var entries []*stl.Entry
 	var summary aggregators.Summary

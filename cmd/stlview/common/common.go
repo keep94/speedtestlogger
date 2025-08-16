@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/keep94/speedtestlogger/stl/aggregators"
+	"github.com/keep94/speedtestlogger/stl/dates"
 	"github.com/keep94/speedtestlogger/stl/format"
 	"github.com/keep94/toolbox/date_util"
 	"github.com/keep94/toolbox/http_util"
@@ -52,11 +53,12 @@ func (s *SpeedFormatter) FormatSpeed(mbps float64) string {
 // DateHandler. If the date parameter is of the form yyyyMMdd, then
 // ParseDateParam returns the year, month, and day with the day DateHandler.
 // If there is an error parsing the date, ParseDateParam returns the
-// current time according to the now parameter normalized with the
+// current date according to the now and loc parameter normalized with the
 // defaultHandler along with the defaultHandler.
 func ParseDateParam(
 	dateParam string,
-	now time.Time,
+	now int64,
+	loc *time.Location,
 	defaultHandler DateHandler) (time.Time, DateHandler) {
 	var returnedHandler DateHandler
 	if len(dateParam) == 4 {
@@ -70,7 +72,8 @@ func ParseDateParam(
 	}
 	result, err := time.Parse(date_util.YMDFormat, dateParam)
 	if err != nil || returnedHandler == nil {
-		return defaultHandler.Normalize(now), defaultHandler
+		current := defaultHandler.Normalize(dates.DatePart(now, loc))
+		return current, defaultHandler
 	}
 	return result, returnedHandler
 }

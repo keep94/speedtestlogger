@@ -17,6 +17,11 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+const (
+	kMillionFloat = 1000000.0
+	kEightFloat   = 8.0
+)
+
 var (
 	fDb  string
 	fCsv string
@@ -33,19 +38,17 @@ func main() {
 	defer db.Close()
 	store := for_sqlite.New(db)
 	entry := stl.Entry{Ts: time.Now().Unix()}
-	if fCsv == "" {
-		addEntry(store, &entry)
-	} else {
+	if fCsv != "" {
 		csvrow := readcsv(fCsv)
 		if len(csvrow) < 7 {
 			log.Fatal("Not enough columns in csv")
 		}
 		download, _ := strconv.ParseFloat(csvrow[5], 64)
 		upload, _ := strconv.ParseFloat(csvrow[6], 64)
-		entry.DownloadMbps = download * 8.0 / 1000000.0
-		entry.UploadMbps = upload * 8.0 / 1000000.0
-		addEntry(store, &entry)
+		entry.DownloadMbps = download * kEightFloat / kMillionFloat
+		entry.UploadMbps = upload * kEightFloat / kMillionFloat
 	}
+	addEntry(store, &entry)
 }
 
 func readcsv(csvPath string) []string {
