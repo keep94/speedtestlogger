@@ -51,6 +51,7 @@ var (
       <th>Date</th>
       <th>Avg Download</th>
       <th>Avg Upload</th>
+      <th>Lapse</th>
     </tr>
     {{with $top := .}}
     {{range .DatedSummaries}}
@@ -58,6 +59,7 @@ var (
       <td><a href="{{$top.DrillDown .Date}}">{{$top.DrillDownFormat .Date}}</a></td>
       <td align="right">{{with .DownloadMbps}}{{if .Exists}}{{$top.FormatSpeed .Avg}}{{else}}--{{end}}{{end}}</td>
       <td align="right">{{with .UploadMbps}}{{if .Exists}}{{$top.FormatSpeed .Avg}}{{else}}--{{end}}{{end}}</td>
+      <td>{{if .ServiceLapse}}X{{else}}&nbsp;{{end}}</td>
     </tr>
     {{end}}
     {{end}}

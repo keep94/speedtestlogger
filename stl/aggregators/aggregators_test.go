@@ -29,6 +29,11 @@ func TestByPeriodTotaler(t *testing.T) {
 		UploadMbps:   13.0,
 	})
 	totaler.Add(stl.Entry{
+		Ts:           dates.ToTimestamp(date_util.YMD(2025, 12, 12), loc),
+		DownloadMbps: 0.0,
+		UploadMbps:   0.0,
+	})
+	totaler.Add(stl.Entry{
 		Ts:           dates.ToTimestamp(date_util.YMD(2025, 12, 1), loc),
 		DownloadMbps: 110.0,
 		UploadMbps:   11.0,
@@ -36,28 +41,48 @@ func TestByPeriodTotaler(t *testing.T) {
 	totaler.Add(stl.Entry{
 		Ts:           dates.ToTimestamp(date_util.YMD(2025, 10, 1), loc),
 		DownloadMbps: 100.0,
-		UploadMbps:   10.0,
+		UploadMbps:   0.0,
+	})
+	totaler.Add(stl.Entry{
+		Ts:           dates.ToTimestamp(date_util.YMD(2025, 10, 1), loc),
+		DownloadMbps: 0.0,
+		UploadMbps:   70.0,
 	})
 	datedSummaries := totaler.DatedSummaries()
 	assert.Len(t, datedSummaries, 4)
 
 	assert.Equal(t, date_util.YMD(2025, 12, 1), datedSummaries[0].Date)
-	assert.Equal(t, 120.0, datedSummaries[0].DownloadMbps.Avg())
-	assert.Equal(t, 12.0, datedSummaries[0].UploadMbps.Avg())
+	assert.True(t, datedSummaries[0].ServiceLapse)
 	assert.True(t, datedSummaries[0].DownloadMbps.Exists())
 	assert.True(t, datedSummaries[0].UploadMbps.Exists())
+	assert.Equal(t, 80.0, datedSummaries[0].DownloadMbps.Avg())
+	assert.Equal(t, 8.0, datedSummaries[0].UploadMbps.Avg())
 
 	assert.Equal(t, date_util.YMD(2025, 11, 1), datedSummaries[1].Date)
+	assert.False(t, datedSummaries[1].ServiceLapse)
 	assert.False(t, datedSummaries[1].DownloadMbps.Exists())
 	assert.False(t, datedSummaries[1].UploadMbps.Exists())
 
 	assert.Equal(t, date_util.YMD(2025, 10, 1), datedSummaries[2].Date)
-	assert.Equal(t, 100.0, datedSummaries[2].DownloadMbps.Avg())
-	assert.Equal(t, 10.0, datedSummaries[2].UploadMbps.Avg())
+	assert.False(t, datedSummaries[2].ServiceLapse)
 	assert.True(t, datedSummaries[2].DownloadMbps.Exists())
 	assert.True(t, datedSummaries[2].UploadMbps.Exists())
+	assert.Equal(t, 50.0, datedSummaries[2].DownloadMbps.Avg())
+	assert.Equal(t, 35.0, datedSummaries[2].UploadMbps.Avg())
 
 	assert.Equal(t, date_util.YMD(2025, 9, 1), datedSummaries[3].Date)
+	assert.False(t, datedSummaries[3].ServiceLapse)
+	assert.False(t, datedSummaries[3].DownloadMbps.Exists())
+	assert.False(t, datedSummaries[3].UploadMbps.Exists())
+
+	// check that datedSummaries array doesn't change.
+	totaler.Add(stl.Entry{
+		Ts:           dates.ToTimestamp(date_util.YMD(2025, 9, 1), loc),
+		DownloadMbps: 36.53,
+		UploadMbps:   7.21,
+	})
+	assert.Equal(t, date_util.YMD(2025, 9, 1), datedSummaries[3].Date)
+	assert.False(t, datedSummaries[3].ServiceLapse)
 	assert.False(t, datedSummaries[3].DownloadMbps.Exists())
 	assert.False(t, datedSummaries[3].UploadMbps.Exists())
 }

@@ -38,10 +38,17 @@ func (a *Average) Avg() float64 {
 type Summary struct {
 	DownloadMbps Average
 	UploadMbps   Average
+
+	// True if there was a lapse in service. A lapse in service is 0
+	// download speed and 0 upload speed.
+	ServiceLapse bool
 }
 
 // Add adds an stl.Entry to this summary.
 func (s *Summary) Add(entry stl.Entry) {
+	if entry.DownloadMbps == 0.0 && entry.UploadMbps == 0.0 {
+		s.ServiceLapse = true
+	}
 	s.DownloadMbps.Add(entry.DownloadMbps)
 	s.UploadMbps.Add(entry.UploadMbps)
 }
