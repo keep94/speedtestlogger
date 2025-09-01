@@ -38,11 +38,13 @@ func main() {
 	defer db.Close()
 	store := for_sqlite.New(db)
 	entry := stl.Entry{Ts: time.Now().Unix()}
+	var csvrow []string
 	if fCsv != "" {
-		csvrow := readcsv(fCsv)
-		if len(csvrow) < 7 {
-			log.Fatal("Not enough columns in csv")
-		}
+		csvrow = readcsv(fCsv)
+	}
+	if len(csvrow) < 7 {
+		log.Println("Not enough columns in csv:", csvrow)
+	} else {
 		download, _ := strconv.ParseFloat(csvrow[5], 64)
 		upload, _ := strconv.ParseFloat(csvrow[6], 64)
 		entry.DownloadMbps = download * kEightFloat / kMillionFloat
