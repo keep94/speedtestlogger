@@ -42,7 +42,9 @@ func main() {
 	if fCsv != "" {
 		csvrow = readcsv(fCsv)
 	}
-	if len(csvrow) < 7 {
+	if fCsv == "" {
+		log.Println("No csv file.")
+	} else if len(csvrow) < 7 {
 		log.Println("Not enough columns in csv:", csvrow)
 	} else {
 		download, _ := strconv.ParseFloat(csvrow[5], 64)
