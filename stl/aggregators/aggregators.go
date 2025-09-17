@@ -39,6 +39,9 @@ type Summary struct {
 	DownloadMbps Average
 	UploadMbps   Average
 
+	// Percent uptime 0 to 100.
+	PercentUptime Average
+
 	// True if there was a lapse in service. A lapse in service is 0
 	// download speed and 0 upload speed.
 	ServiceLapse bool
@@ -48,6 +51,9 @@ type Summary struct {
 func (s *Summary) Add(entry stl.Entry) {
 	if entry.DownloadMbps == 0.0 && entry.UploadMbps == 0.0 {
 		s.ServiceLapse = true
+		s.PercentUptime.Add(0.0)
+	} else {
+		s.PercentUptime.Add(100.0)
 	}
 	s.DownloadMbps.Add(entry.DownloadMbps)
 	s.UploadMbps.Add(entry.UploadMbps)

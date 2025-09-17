@@ -43,6 +43,8 @@ var (
   Download Average (Mbps): {{with .Summary.DownloadMbps}}{{if .Exists}}{{$top.FormatSpeed .Avg}}{{else}}--{{end}}{{end}}
   <br>
   Upload Average (Mbps): {{with .Summary.UploadMbps}}{{if .Exists}}{{$top.FormatSpeed .Avg}}{{else}}--{{end}}{{end}}
+  <br>
+  Percent Uptime: {{with .Summary.PercentUptime}}{{if .Exists}}{{$top.FormatPercent .Avg}}{{else}}--{{end}}{{end}}
   {{end}}
   </span>
   <br><br>
@@ -52,6 +54,7 @@ var (
       <th>Avg Download</th>
       <th>Avg Upload</th>
       <th>Lapse</th>
+      <th>% Uptime</th>
     </tr>
     {{with $top := .}}
     {{range .DatedSummaries}}
@@ -60,6 +63,7 @@ var (
       <td align="right">{{with .DownloadMbps}}{{if .Exists}}{{$top.FormatSpeed .Avg}}{{else}}--{{end}}{{end}}</td>
       <td align="right">{{with .UploadMbps}}{{if .Exists}}{{$top.FormatSpeed .Avg}}{{else}}--{{end}}{{end}}</td>
       <td>{{if .ServiceLapse}}X{{else}}&nbsp;{{end}}</td>
+      <td align="right">{{with .PercentUptime}}{{if .Exists}}{{$top.FormatPercent .Avg}}{{else}}--{{end}}{{end}}</td>
     </tr>
     {{end}}
     {{end}}
@@ -111,7 +115,8 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w,
 		kTemplate,
 		&view{
-			common.SpeedFormatter{},
+			common.SpeedFormatter{Precision: 2},
+			common.PercentFormatter{Precision: 2},
 			common.TimestampFormatter{Location: h.Location},
 			handler,
 			current,
@@ -124,6 +129,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 type view struct {
 	common.SpeedFormatter
+	common.PercentFormatter
 	common.TimestampFormatter
 	common.DateHandler
 	Current        time.Time

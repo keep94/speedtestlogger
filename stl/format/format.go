@@ -6,9 +6,9 @@ import (
 	"time"
 )
 
-// Speed formats internet speeds.
-func Speed(mbps float64) string {
-	return strconv.FormatFloat(mbps, 'f', 2, 64)
+// Float formats a float64 with precision digits after the decimal
+func Float(value float64, precision int) string {
+	return strconv.FormatFloat(value, 'f', precision, 64)
 }
 
 // Time formats a time given seconds after Jan 1, 1970 GMT

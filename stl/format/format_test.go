@@ -14,7 +14,7 @@ func TestTime(t *testing.T) {
 	assert.Equal(t, "Tue 08/12/2025 06:13", formatted)
 }
 
-func TestSpeed(t *testing.T) {
-	assert.Equal(t, "51.38", Speed(51.375))
-	assert.Equal(t, "0.03", Speed(0.03125))
+func TestFloat(t *testing.T) {
+	assert.Equal(t, "51.38", Float(51.375, 2))
+	assert.Equal(t, "0.0312", Float(0.03125, 4))
 }
