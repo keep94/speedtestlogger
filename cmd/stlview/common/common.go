@@ -39,26 +39,20 @@ func (t *TimestampFormatter) FormatTimestamp(ts int64) string {
 
 // SpeedFormatter formats internet speeds.
 type SpeedFormatter struct {
-
-	// Number of digits after the decimal point
-	Precision int
 }
 
 // FormatSpeed formats an internet speed.
 func (s *SpeedFormatter) FormatSpeed(mbps float64) string {
-	return format.Float(mbps, s.Precision)
+	return format.Float(mbps, 2)
 }
 
 // PercentFormat formats percents.
 type PercentFormatter struct {
-
-	// Number of digits after the decimal point
-	Precision int
 }
 
 // FormatPercent formats a percent.
 func (p *PercentFormatter) FormatPercent(percent float64) string {
-	return format.Float(percent, p.Precision)
+	return format.Float(percent, 2)
 }
 
 // ParseDateParam parses the value of the date parameter. If the date

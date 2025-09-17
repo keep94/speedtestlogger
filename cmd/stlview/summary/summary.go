@@ -115,9 +115,8 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w,
 		kTemplate,
 		&view{
-			common.SpeedFormatter{Precision: 2},
-			common.PercentFormatter{Precision: 2},
-			common.TimestampFormatter{Location: h.Location},
+			common.SpeedFormatter{},
+			common.PercentFormatter{},
 			handler,
 			current,
 			h.BuildId,
@@ -130,7 +129,6 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 type view struct {
 	common.SpeedFormatter
 	common.PercentFormatter
-	common.TimestampFormatter
 	common.DateHandler
 	Current        time.Time
 	BuildId        string

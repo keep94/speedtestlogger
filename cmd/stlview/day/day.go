@@ -104,7 +104,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w,
 		kTemplate,
 		&view{
-			common.SpeedFormatter{Precision: 2},
+			common.SpeedFormatter{},
 			common.TimestampFormatter{Location: h.Location},
 			handler,
 			current,
