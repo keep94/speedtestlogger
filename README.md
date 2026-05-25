@@ -8,7 +8,7 @@ You must have the Speedtest cli by Ookla. Go [here](https://www.speedtest.net/ap
 
 ## Architecture
 
-This app actualy contains 3 programs:
+This app actually contains 3 programs:
 
 - **stlinit:** You run this once during setup to initialize the sqlite file that will hold the internet speeds.
 - **stllog:** This program uses the CSV file from the Speedtest cli by Ookla to log the current internet speed in the sqlite file created by stlinit. Typically a cron job runs this program along with the Speedtest cli by Ookla once every hour.
