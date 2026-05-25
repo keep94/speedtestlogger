@@ -1,4 +1,5 @@
-// Package common contains common routines for the stlview pages.
+// Package common contains common routines for the stlview pages. Dates,
+// represented by time.Time, are always in the UTC timezone.
 package common
 
 import (

@@ -1,4 +1,5 @@
-// Package aggregators aggregates values.
+// Package aggregators aggregates values. Dates, represented by time.Time,
+// are always in the UTC timezone.
 package aggregators
 
 import (

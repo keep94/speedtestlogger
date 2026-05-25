@@ -1,5 +1,6 @@
 // Package dates contains routines for converting between dates and
-// timestamps.
+// timestamps. Dates, represented by time.Time, are always in the UTC
+// timezone.
 package dates
 
 import (
