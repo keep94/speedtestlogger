@@ -3,6 +3,7 @@ package summary
 import (
 	"html/template"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/keep94/consume2"
@@ -36,7 +37,7 @@ var (
 </head>
 <body>
   <h1>Average Speeds for {{.Format .Current}} &nbsp; &nbsp; Build: {{.BuildId}}</h1>
-  <a href="{{.Prev .Current}}">prev</a> &nbsp; <a href="{{.Next .Current}}">next</a> &nbsp; {{if .DrillUp .Current}}<a href="{{.DrillUp .Current}}">up</a>{{end}}
+  <a href="{{.Prev .Current}}">prev</a> &nbsp; <a href="{{.Next .Current}}">next</a> &nbsp; {{if .DrillUp .Current}}<a href="{{.DrillUp .Current}}">up</a> &nbsp; {{end}} <a href="{{.DateRangeLink}}">date range</a>
   <br><br>
   <span class="normal">
   {{with $top := .}}
@@ -118,6 +119,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			common.SpeedFormatter{},
 			common.PercentFormatter{},
 			handler,
+			common.DateRangeLink(r.URL),
 			current,
 			h.BuildId,
 			totaler.DatedSummaries(),
@@ -130,6 +132,7 @@ type view struct {
 	common.SpeedFormatter
 	common.PercentFormatter
 	common.DateHandler
+	DateRangeLink  *url.URL
 	Current        time.Time
 	BuildId        string
 	DatedSummaries []*aggregators.DatedSummary

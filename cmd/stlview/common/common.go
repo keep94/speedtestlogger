@@ -15,15 +15,21 @@ import (
 )
 
 const (
-	Date        = "date"
-	DayPage     = "/day"
-	SummaryPage = "/summary"
+	Date          = "date"
+	DayPage       = "/day"
+	SummaryPage   = "/summary"
+	DateRangePage = "/daterange"
 )
 
 // NewTemplate returns a new template instance. name is the name
 // of the template; templateStr is the template string.
 func NewTemplate(name, templateStr string) *template.Template {
 	return template.Must(template.New(name).Parse(templateStr))
+}
+
+// Returns the daterange link.
+func DateRangeLink(currentUrl *url.URL) *url.URL {
+	return http_util.NewUrl(DateRangePage, "prev", currentUrl.String())
 }
 
 // TimestampFormatter handles formatting timestamps

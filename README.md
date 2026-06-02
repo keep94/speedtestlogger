@@ -110,4 +110,8 @@ Store in `/Library/LaunchDaemons` in a file called `yourlastname.speedtest.plist
 </dict>
 </plist>
 ```
+## Using the Viewer
+
 You can see the download speeds by going to [http://localhost:9792](http://localhost:9792). You can change this by entering a different port number besides 9792 in the plist file.
+
+The home page shows you the download speeds for the current day. Use the breadcrumbs below the title to navigate the days, months, and years. Click on the "date range" breadcrumb to get statistics for an arbitrary date range.

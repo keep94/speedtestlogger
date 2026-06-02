@@ -3,6 +3,7 @@ package day
 import (
 	"html/template"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/keep94/consume2"
@@ -37,7 +38,7 @@ var (
 </head>
 <body>
   <h1>Speeds for {{.Format .Current}} &nbsp; &nbsp; Build: {{.BuildId}}</h1>
-  <a href="{{.Prev .Current}}">prev</a> &nbsp; <a href="{{.Next .Current}}">next</a> &nbsp; <a href="{{.DrillUp .Current}}">up</a>
+  <a href="{{.Prev .Current}}">prev</a> &nbsp; <a href="{{.Next .Current}}">next</a> &nbsp; <a href="{{.DrillUp .Current}}">up</a> &nbsp; <a href="{{.DateRangeLink}}">date range</a>
   <br><br>
   <span class="normal">
   {{with $top := .}}
@@ -107,6 +108,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			common.SpeedFormatter{},
 			common.TimestampFormatter{Location: h.Location},
 			handler,
+			common.DateRangeLink(r.URL),
 			current,
 			h.BuildId,
 			entries,
@@ -119,10 +121,11 @@ type view struct {
 	common.SpeedFormatter
 	common.TimestampFormatter
 	common.DateHandler
-	Current time.Time
-	BuildId string
-	Entries []*stl.Entry
-	Summary aggregators.Summary
+	DateRangeLink *url.URL
+	Current       time.Time
+	BuildId       string
+	Entries       []*stl.Entry
+	Summary       aggregators.Summary
 }
 
 func init() {

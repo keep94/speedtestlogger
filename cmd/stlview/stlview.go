@@ -10,6 +10,7 @@ import (
 
 	"github.com/keep94/context"
 	"github.com/keep94/speedtestlogger/cmd/stlview/common"
+	"github.com/keep94/speedtestlogger/cmd/stlview/daterange"
 	"github.com/keep94/speedtestlogger/cmd/stlview/day"
 	"github.com/keep94/speedtestlogger/cmd/stlview/summary"
 	"github.com/keep94/speedtestlogger/stl/stldb/for_sqlite"
@@ -60,6 +61,12 @@ func main() {
 			Store:    kStore,
 			BuildId:  build.BuildId(version),
 			Clock:    kClock,
+			Location: time.Local})
+	http.Handle(
+		common.DateRangePage,
+		&daterange.Handler{
+			Store:    kStore,
+			BuildId:  build.BuildId(version),
 			Location: time.Local})
 	defaultHandler := context.ClearHandler(
 		weblogs.HandlerWithOptions(
