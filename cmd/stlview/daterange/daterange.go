@@ -99,7 +99,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	startDateStr := strings.TrimSpace(r.Form.Get("sd"))
 	endDateStr := strings.TrimSpace(r.Form.Get("ed"))
-	prevUrl := r.Form.Get("prev")
+	prevUrl := http_util.Sanitize(r.Form.Get("prev"), common.DayPage)
 	if startDateStr == "" && endDateStr == "" {
 		http_util.WriteTemplate(
 			w,
@@ -107,7 +107,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			&view{
 				Values:   r.Form,
 				BuildId:  h.BuildId,
-				BackLink: backLink(prevUrl),
+				BackLink: prevUrl,
 			},
 		)
 		return
@@ -120,7 +120,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			&view{
 				Values:       r.Form,
 				BuildId:      h.BuildId,
-				BackLink:     backLink(prevUrl),
+				BackLink:     prevUrl,
 				ErrorMessage: "Start and End Date must be in yyyyMMdd format",
 			},
 		)
@@ -142,7 +142,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		&view{
 			Values:   r.Form,
 			BuildId:  h.BuildId,
-			BackLink: backLink(prevUrl),
+			BackLink: prevUrl,
 			Summary:  &summary,
 		},
 	)
@@ -156,13 +156,6 @@ type view struct {
 	BackLink     string
 	Summary      *aggregators.Summary
 	ErrorMessage string
-}
-
-func backLink(prevUrl string) string {
-	if prevUrl == "" {
-		return common.DayPage
-	}
-	return prevUrl
 }
 
 func parseDates(startDateStr, endDateStr string) (
